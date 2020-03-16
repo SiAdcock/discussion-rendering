@@ -13,6 +13,7 @@ export interface CommentType {
   numResponses?: number;
   numRecommends: number;
   isHighlighted: boolean;
+  isSticky?: boolean;
   userProfile: UserProfile;
   responseTo?: {
     displayName: string;

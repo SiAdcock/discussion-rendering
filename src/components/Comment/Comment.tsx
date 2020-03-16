@@ -10,7 +10,12 @@ import { GuardianStaff, GuardianPick } from "../Badges/Badges";
 import { RecommendationCount } from "../RecommendationCount/RecommendationCount";
 import { AbuseReportForm } from "../AbuseReportForm/AbuseReportForm";
 import { Timestamp } from "../Timestamp/Timestamp";
-import { pickComment, unPickComment } from "../../lib/api";
+import {
+  pickComment,
+  unPickComment,
+  stickComment,
+  unStickComment
+} from "../../lib/api";
 import { Avatar } from "../Avatar/Avatar";
 
 type Props = {
@@ -170,6 +175,7 @@ export const Comment = ({
   const [isHighlighted, setIsHighlighted] = useState<boolean>(
     comment.isHighlighted
   );
+  const [isStuck, setIsStuck] = useState<boolean>(!!comment.isSticky);
   const [error, setError] = useState<string>();
 
   const pick = async () => {
@@ -189,6 +195,26 @@ export const Comment = ({
       setError(response.message);
     } else {
       setIsHighlighted(false);
+    }
+  };
+
+  const stick = async () => {
+    setError("");
+    const response = await stickComment(comment.id);
+    if (response.status === "error") {
+      setError(response.message);
+    } else {
+      setIsStuck(true);
+    }
+  };
+
+  const unStick = async () => {
+    setError("");
+    const response = await unStickComment(comment.id);
+    if (response.status === "error") {
+      setError(response.message);
+    } else {
+      setIsStuck(false);
     }
   };
 
@@ -288,6 +314,15 @@ export const Comment = ({
                         {isHighlighted ? "Unpick" : "Pick"}
                       </button>
                     )}
+                  {/* Only staff can stick */}
+                  {user && user.badge.some(e => e.name === "Staff") && (
+                    <button
+                      onClick={isHighlighted ? unStick : stick}
+                      className={commentControlsButtonStyles}
+                    >
+                      {isStuck ? "Unstick" : "Stick"}
+                    </button>
+                  )}
                 </div>
                 <div>
                   <AbuseReportForm commentId={comment.id} pillar={pillar} />

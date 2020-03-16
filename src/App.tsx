@@ -106,6 +106,11 @@ const readFiltersFromLocalStorage = (): FilterOptions => {
   };
 };
 
+const stickyFirst = (a: CommentType, b: CommentType) => {
+  if (a.isSticky) return -1;
+  return 1;
+};
+
 export const App = ({ shortUrl, user }: Props) => {
   const [filters, setFilters] = useState<FilterOptions>(
     readFiltersFromLocalStorage()
@@ -213,19 +218,22 @@ export const App = ({ shortUrl, user }: Props) => {
           </div>
         ) : (
           <ul className={commentContainerStyles}>
-            {comments.slice(0, 2).map(comment => (
-              <CommentContainer
-                key={comment.id}
-                comment={comment}
-                pillar="news"
-                shortUrl={shortUrl}
-                onAddComment={onAddComment}
-                user={user}
-                threads={filters.threads}
-                commentBeingRepliedTo={commentBeingRepliedTo}
-                setCommentBeingRepliedTo={setCommentBeingRepliedTo}
-              />
-            ))}
+            {comments
+              .filter(comment => comment.isSticky !== true)
+              .slice(0, 2)
+              .map(comment => (
+                <CommentContainer
+                  key={comment.id}
+                  comment={comment}
+                  pillar="news"
+                  shortUrl={shortUrl}
+                  onAddComment={onAddComment}
+                  user={user}
+                  threads={filters.threads}
+                  commentBeingRepliedTo={commentBeingRepliedTo}
+                  setCommentBeingRepliedTo={setCommentBeingRepliedTo}
+                />
+              ))}
           </ul>
         )}
         <div
@@ -285,7 +293,7 @@ export const App = ({ shortUrl, user }: Props) => {
         <p>TODO: No comment component goes here</p>
       ) : (
         <ul className={commentContainerStyles}>
-          {comments.map(comment => (
+          {comments.sort(stickyFirst).map(comment => (
             <CommentContainer
               key={comment.id}
               comment={comment}
