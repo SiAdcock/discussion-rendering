@@ -1,6 +1,7 @@
 import babel from "rollup-plugin-babel";
 import resolve from "rollup-plugin-node-resolve";
 import commonjs from "rollup-plugin-commonjs";
+import analyze from "rollup-plugin-analyzer";
 
 const extensions = [".ts", ".tsx"];
 
@@ -9,11 +10,13 @@ module.exports = {
   output: [
     {
       file: "build/App.js",
-      format: "cjs"
+      format: "cjs",
+      sourcemap: true
     },
     {
       file: "build/App.esm.js",
-      format: "esm"
+      format: "esm",
+      sourcemap: true
     }
   ],
   external: [
@@ -28,5 +31,10 @@ module.exports = {
     "@guardian/src-foundations/typography",
     "prop-types"
   ],
-  plugins: [babel({ extensions }), resolve({ extensions }), commonjs()]
+  plugins: [
+    babel({ extensions }),
+    resolve({ extensions }),
+    commonjs(),
+    analyze()
+  ]
 };
