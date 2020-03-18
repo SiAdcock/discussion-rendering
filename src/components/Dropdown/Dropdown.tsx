@@ -4,12 +4,7 @@ import { css, cx } from "emotion";
 import FocusLock from "react-focus-lock";
 
 import { palette } from "@guardian/src-foundations";
-import {
-  neutral,
-  border,
-  brandAlt,
-  background
-} from "@guardian/src-foundations/palette";
+import { neutral, border, background } from "@guardian/src-foundations/palette";
 import { textSans } from "@guardian/src-foundations/typography";
 import { from, until } from "@guardian/src-foundations/mq";
 
@@ -115,8 +110,6 @@ const buttonStyles = css`
   text-decoration: none;
 
   :hover {
-    /* color: ${brandAlt[400]}; */
-
     :after {
       transform: translateY(0) rotate(45deg);
     }
